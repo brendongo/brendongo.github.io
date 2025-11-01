@@ -1756,6 +1756,18 @@
             showQuestion();
         }
 
+        // Initialize audio on first user interaction (required for iOS)
+        function enableAudioOnFirstInteraction() {
+            initAudio();
+            // Remove listeners after first interaction
+            document.removeEventListener('touchstart', enableAudioOnFirstInteraction);
+            document.removeEventListener('click', enableAudioOnFirstInteraction);
+        }
+
+        // Add listeners for first user interaction
+        document.addEventListener('touchstart', enableAudioOnFirstInteraction, { passive: true });
+        document.addEventListener('click', enableAudioOnFirstInteraction);
+
         // Initialize quiz
         initializeQuestions();
 
