@@ -1,0 +1,1491 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Creepster&display=swap" rel="stylesheet">
+    <title>Nightmare Psychiatry Quiz 🎃</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #0a0a0a;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            user-select: none;
+            position: relative;
+            overflow: hidden;
+        }
+
+        body::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(circle at 20% 50%, rgba(255, 94, 0, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(138, 43, 226, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 40% 20%, rgba(255, 0, 0, 0.1) 0%, transparent 40%),
+                linear-gradient(180deg, #0a0a0a 0%, #1a0f1f 50%, #2a1a3a 100%);
+            animation: spookyPulse 8s ease-in-out infinite;
+        }
+
+        @keyframes spookyPulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+
+        .quiz-container {
+            background: linear-gradient(145deg, rgba(20, 10, 30, 0.95), rgba(40, 20, 50, 0.95));
+            border: 2px solid rgba(255, 94, 0, 0.3);
+            border-radius: 20px;
+            padding: 50px;
+            max-width: 1200px;
+            width: 100%;
+            box-shadow: 
+                0 20px 60px rgba(255, 94, 0, 0.2),
+                0 0 100px rgba(138, 43, 226, 0.1),
+                inset 0 0 20px rgba(255, 94, 0, 0.05);
+            backdrop-filter: blur(10px);
+            position: relative;
+            z-index: 1;
+        }
+
+        .quiz-container::before {
+            content: "🦇";
+            position: absolute;
+            top: -20px;
+            left: 30px;
+            font-size: 40px;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        .quiz-container::after {
+            content: "👻";
+            position: absolute;
+            top: -20px;
+            right: 30px;
+            font-size: 40px;
+            animation: float 3s ease-in-out infinite 0.5s;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .progress-bar {
+            height: 10px;
+            background: rgba(50, 25, 70, 0.7);
+            border-radius: 5px;
+            margin-bottom: 40px;
+            overflow: hidden;
+            border: 1px solid rgba(255, 94, 0, 0.2);
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #ff5e00, #ff9500, #ff5e00);
+            border-radius: 3px;
+            transition: width 0.3s ease;
+            box-shadow: 0 0 10px rgba(255, 94, 0, 0.6);
+            animation: glow 2s ease-in-out infinite;
+        }
+
+        @keyframes glow {
+            0%, 100% { box-shadow: 0 0 10px rgba(255, 94, 0, 0.6); }
+            50% { box-shadow: 0 0 20px rgba(255, 94, 0, 0.9); }
+        }
+
+        .question-number {
+            color: #ff9500;
+            font-size: 16px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 15px;
+            text-shadow: 0 0 10px rgba(255, 149, 0, 0.5);
+        }
+
+        .difficulty-badge {
+            display: inline-block;
+            padding: 5px 15px;
+            border-radius: 12px;
+            font-size: 13px;
+            font-weight: 600;
+            margin-left: 15px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            animation: flicker 3s infinite;
+        }
+
+        @keyframes flicker {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.8; }
+        }
+
+        .difficulty-easy {
+            background: linear-gradient(135deg, #50c878, #228b22);
+            color: white;
+            box-shadow: 0 0 15px rgba(80, 200, 120, 0.5);
+        }
+
+        .difficulty-medium {
+            background: linear-gradient(135deg, #ffa500, #ff8c00);
+            color: white;
+            box-shadow: 0 0 15px rgba(255, 165, 0, 0.5);
+        }
+
+        .difficulty-hard {
+            background: linear-gradient(135deg, #8b0000, #dc143c);
+            color: white;
+            box-shadow: 0 0 15px rgba(220, 20, 60, 0.5);
+        }
+
+        .question {
+            font-size: 28px;
+            font-weight: 700;
+            color: #f8f8f8;
+            margin-bottom: 40px;
+            line-height: 1.5;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+        }
+
+        .option {
+            padding: 20px 30px;
+            background: linear-gradient(135deg, rgba(40, 20, 60, 0.7), rgba(60, 30, 80, 0.7));
+            border: 2px solid rgba(138, 43, 226, 0.3);
+            border-radius: 12px;
+            font-size: 19px;
+            color: #e0e0e0;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+            cursor: pointer;
+        }
+
+        .option:hover:not(.correct):not(.incorrect):not(.disabled) {
+            border-color: rgba(255, 94, 0, 0.5);
+            background: linear-gradient(135deg, rgba(50, 25, 70, 0.8), rgba(70, 35, 90, 0.8));
+            transform: translateX(5px);
+            box-shadow: 0 0 20px rgba(255, 94, 0, 0.2);
+        }
+
+        .option.disabled {
+            pointer-events: none;
+            opacity: 0.5;
+        }
+
+        .option.correct {
+            background: linear-gradient(135deg, #50c878, #228b22);
+            color: white;
+            border-color: #50c878;
+            animation: correctPulse 0.5s ease;
+            box-shadow: 0 0 30px rgba(80, 200, 120, 0.6);
+        }
+
+        .option.incorrect {
+            background: linear-gradient(135deg, #8b0000, #4b0000);
+            color: #ff9999;
+            border-color: #8b0000;
+            animation: shake 0.5s ease;
+        }
+
+        @keyframes correctPulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
+        }
+
+        .answer-reveal {
+            margin-top: 30px;
+            padding: 20px;
+            background: linear-gradient(135deg, rgba(50, 25, 70, 0.9), rgba(70, 35, 90, 0.9));
+            border-radius: 12px;
+            border-left: 4px solid #ff5e00;
+            border: 2px solid rgba(255, 94, 0, 0.3);
+            opacity: 0;
+            transform: translateY(20px);
+            animation: slideIn 0.5s ease forwards;
+            box-shadow: 0 0 20px rgba(255, 94, 0, 0.2);
+        }
+
+        @keyframes slideIn {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .answer-label {
+            font-size: 14px;
+            font-weight: 600;
+            color: #ff9500;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 10px;
+            text-shadow: 0 0 10px rgba(255, 149, 0, 0.5);
+        }
+
+        .answer-text {
+            font-size: 18px;
+            color: #e0e0e0;
+            font-weight: 500;
+            line-height: 1.6;
+        }
+
+        .click-hint {
+            text-align: center;
+            margin-top: 30px;
+            font-size: 15px;
+            color: #ff9500;
+            font-style: italic;
+            opacity: 0;
+            animation: fadeIn 0.5s ease 0.5s forwards;
+            text-shadow: 0 0 5px rgba(255, 149, 0, 0.3);
+        }
+
+        .quiz-complete {
+            text-align: center;
+            animation: slideIn 0.5s ease;
+        }
+
+        .quiz-complete h2 {
+            font-family: 'Creepster', cursive;
+            font-size: 48px;
+            color: #ff5e00;
+            margin-bottom: 25px;
+            text-shadow: 0 0 20px rgba(255, 94, 0, 0.8);
+            animation: spookyGlow 2s ease-in-out infinite;
+            letter-spacing: 3px;
+        }
+
+        @keyframes spookyGlow {
+            0%, 100% { text-shadow: 0 0 20px rgba(255, 94, 0, 0.8); }
+            50% { text-shadow: 0 0 30px rgba(255, 94, 0, 1); }
+        }
+
+        .score {
+            font-size: 64px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #ff5e00, #ff9500, #ff5e00);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 25px;
+            animation: spookyGlow 2s ease-in-out infinite;
+        }
+
+        .score-breakdown {
+            display: flex;
+            justify-content: center;
+            gap: 25px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+
+        .score-item {
+            text-align: center;
+            padding: 20px;
+            background: rgba(50, 25, 70, 0.5);
+            border-radius: 10px;
+            border: 1px solid rgba(255, 94, 0, 0.3);
+        }
+
+        .score-label {
+            font-size: 14px;
+            color: #ff9500;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+        }
+
+        .score-value {
+            font-size: 32px;
+            font-weight: 600;
+            color: #f8f8f8;
+            text-shadow: 0 0 10px rgba(255, 149, 0, 0.3);
+        }
+
+        .restart-btn {
+            padding: 18px 50px;
+            background: linear-gradient(135deg, #ff5e00, #ff7300);
+            color: white;
+            border: 2px solid rgba(255, 94, 0, 0.5);
+            border-radius: 30px;
+            font-size: 20px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+            box-shadow: 0 5px 20px rgba(255, 94, 0, 0.4);
+        }
+
+        .restart-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(255, 94, 0, 0.6);
+            background: linear-gradient(135deg, #ff7300, #ff9500);
+        }
+
+        .spider {
+            position: fixed;
+            top: 10%;
+            right: 5%;
+            font-size: 30px;
+            animation: floatGhost 10s ease-in-out infinite;
+            z-index: 0;
+            opacity: 0.3;
+        }
+
+        @keyframes floatGhost {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            33% { transform: translate(30px, -30px) rotate(5deg); }
+            66% { transform: translate(-20px, 20px) rotate(-5deg); }
+        }
+
+        /* Popup Modal */
+        .popup-modal {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0);
+            background: linear-gradient(135deg, #8b0000, #dc143c);
+            border: 3px solid #ff0000;
+            border-radius: 20px;
+            padding: 40px;
+            text-align: center;
+            z-index: 1000;
+            box-shadow: 0 0 50px rgba(255, 0, 0, 0.8);
+            animation: popupAppear 0.5s ease forwards;
+        }
+
+        .popup-modal.popup-correct {
+            background: linear-gradient(135deg, #50c878, #228b22);
+            border: 3px solid #50c878;
+            box-shadow: 0 0 50px rgba(80, 200, 120, 0.8);
+        }
+
+        @keyframes popupAppear {
+            to {
+                transform: translate(-50%, -50%) scale(1);
+            }
+        }
+
+        .popup-modal h3 {
+            font-family: 'Creepster', cursive;
+            font-size: 42px;
+            color: white;
+            margin-bottom: 15px;
+            text-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
+            letter-spacing: 2px;
+        }
+
+        .popup-correct h3 {
+            font-size: 32px;
+        }
+
+        .popup-modal .emoji {
+            font-size: 80px;
+            margin-bottom: 20px;
+            animation: rotate 1s ease-in-out infinite;
+        }
+
+        @keyframes rotate {
+            0%, 100% { transform: rotate(-10deg); }
+            50% { transform: rotate(10deg); }
+        }
+
+        .popup-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 999;
+            opacity: 0;
+            animation: fadeIn 0.3s ease forwards;
+        }
+    </style>
+</head>
+<body>
+    <div class="spider">🕷️</div>
+    <div class="quiz-container" id="quizContainer">
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressFill"></div>
+        </div>
+        <div id="quizContent"></div>
+    </div>
+
+    <script>
+        const hardQuestions = [
+            {
+                question: "CYP2D6 ultra-rapid metabolizer with treatment-resistant depression. Best medication choice?",
+                options: [
+                    "A) Fluoxetine",
+                    "B) Tranylcypromine",
+                    "C) Lithium augmentation",
+                    "D) Desvenlafaxine",
+                    "E) Modafinil",
+                    "F) Esketamine"
+                ],
+                correct: 3,
+                explanation: "Desvenlafaxine bypasses CYP2D6 metabolism, making it ideal for ultra-rapid metabolizers.",
+                difficulty: "hard"
+            },
+            {
+                question: "Lithium-induced nephrogenic diabetes insipidus with rising creatinine. Best intervention?",
+                options: [
+                    "A) Switch to valproate",
+                    "B) Add amiloride",
+                    "C) Add lamotrigine",
+                    "D) Add hydrochlorothiazide",
+                    "E) Switch to carbamazepine",
+                    "F) Add desmopressin"
+                ],
+                correct: 1,
+                explanation: "Amiloride blocks ENaC channels, preventing lithium reabsorption while maintaining mood stabilization.",
+                difficulty: "hard"
+            },
+            {
+                question: "Acute psychosis with temporal lobe MRI changes and CSF pleocytosis. Most likely antibody?",
+                options: [
+                    "A) Anti-Hu",
+                    "B) Anti-NMDA receptor",
+                    "C) Anti-VGKC",
+                    "D) Anti-GAD65",
+                    "E) Anti-AMPA receptor",
+                    "F) Anti-LGI1"
+                ],
+                correct: 1,
+                explanation: "Anti-NMDA receptor encephalitis presents with psychiatric symptoms before neurological signs.",
+                difficulty: "hard"
+            },
+            {
+                question: "Antipsychotic trial: NNT=7, NNH for weight gain=9, NNH for QTc=142. Interpretation?",
+                options: [
+                    "A) Drug ineffective",
+                    "B) Benefits outweigh risks",
+                    "C) Avoid due to cardiac risk",
+                    "D) Weight gain exceeds benefit",
+                    "E) Non-significant results",
+                    "F) Unfavorable risk-benefit"
+                ],
+                correct: 1,
+                explanation: "NNT of 7 shows moderate efficacy. Weight gain manageable, QTc risk minimal. Benefits outweigh risks.",
+                difficulty: "hard"
+            },
+            {
+                question: "Clozapine patient: fever, tachycardia, CK 890. Best test for NMS vs myocarditis?",
+                options: [
+                    "A) Iron/ferritin",
+                    "B) Troponin/BNP",
+                    "C) Dantrolene test",
+                    "D) EEG",
+                    "E) Repeat CK",
+                    "F) Echo/cardiac MRI"
+                ],
+                correct: 1,
+                explanation: "Troponin and BNP specifically elevated in myocarditis but not NMS.",
+                difficulty: "hard"
+            },
+            {
+                question: "PTSD relapse after successful CPT. Expected neuroimaging pattern?",
+                options: [
+                    "A) ↑ amygdala, ↓ vmPFC",
+                    "B) ↑ bilateral hippocampus",
+                    "C) ↓ amygdala and PFC",
+                    "D) ↑ dorsal ACC, ↓ amygdala",
+                    "E) ↑ anterior insula only",
+                    "F) ↑ hippocampus-PCC connectivity"
+                ],
+                correct: 0,
+                explanation: "PTSD relapse shows amygdala hyperactivity with vmPFC hypoactivity (impaired fear extinction).",
+                difficulty: "hard"
+            },
+            {
+                question: "Mechanism of ketamine's rapid antidepressant effect?",
+                options: [
+                    "A) 5-HT2A agonism",
+                    "B) NMDA antagonism → BDNF/mTOR",
+                    "C) Dopamine reuptake inhibition",
+                    "D) GABA-A potentiation",
+                    "E) Norepinephrine release",
+                    "F) Sigma-1 receptor agonism"
+                ],
+                correct: 1,
+                explanation: "Ketamine blocks NMDA receptors, increasing BDNF and activating mTOR pathway for synaptogenesis.",
+                difficulty: "hard"
+            },
+            {
+                question: "Best predictor of lithium response in bipolar disorder?",
+                options: [
+                    "A) Rapid cycling pattern",
+                    "B) Family history of lithium response",
+                    "C) Comorbid anxiety",
+                    "D) Mixed episodes",
+                    "E) Psychotic features",
+                    "F) Substance use disorder"
+                ],
+                correct: 1,
+                explanation: "Family history of lithium response is the strongest predictor of treatment success.",
+                difficulty: "hard"
+            },
+            {
+                question: "Patient on MAOIs presents with hypertensive crisis. Immediate treatment?",
+                options: [
+                    "A) IV labetalol",
+                    "B) Sublingual nifedipine",
+                    "C) IV phentolamine",
+                    "D) Oral clonidine",
+                    "E) IV hydralazine",
+                    "F) IV nitroprusside"
+                ],
+                correct: 2,
+                explanation: "Phentolamine (alpha-blocker) is first-line for MAOI-induced hypertensive crisis.",
+                difficulty: "hard"
+            },
+            {
+                question: "Which receptor polymorphism predicts antipsychotic-induced hyperprolactinemia?",
+                options: [
+                    "A) 5-HT2A C102T",
+                    "B) DRD2 Taq1A",
+                    "C) COMT Val158Met",
+                    "D) 5-HT2C -759C/T",
+                    "E) DRD3 Ser9Gly",
+                    "F) ABCB1 C3435T"
+                ],
+                correct: 1,
+                explanation: "DRD2 Taq1A polymorphism affects D2 receptor density and prolactin response.",
+                difficulty: "hard"
+            },
+            {
+                question: "Catatonia in adolescent with normal EEG. First-line treatment after lorazepam fails?",
+                options: [
+                    "A) Haloperidol",
+                    "B) ECT",
+                    "C) Amantadine",
+                    "D) Bromocriptine",
+                    "E) Memantine",
+                    "F) Dantrolene"
+                ],
+                correct: 1,
+                explanation: "ECT is the definitive treatment for benzodiazepine-resistant catatonia.",
+                difficulty: "hard"
+            },
+            {
+                question: "HLA-B*1502 screening before starting which medication?",
+                options: [
+                    "A) Lithium",
+                    "B) Valproate",
+                    "C) Carbamazepine",
+                    "D) Lamotrigine",
+                    "E) Topiramate",
+                    "F) Gabapentin"
+                ],
+                correct: 2,
+                explanation: "HLA-B*1502 screening required for carbamazepine due to Stevens-Johnson syndrome risk in Asians.",
+                difficulty: "hard"
+            },
+            {
+                question: "Methylphenidate contraindicated due to risk of sudden death in which condition?",
+                options: [
+                    "A) Tourette syndrome",
+                    "B) Structural cardiac abnormalities",
+                    "C) History of seizures",
+                    "D) Bipolar disorder",
+                    "E) Anxiety disorders",
+                    "F) Glaucoma"
+                ],
+                correct: 1,
+                explanation: "Structural cardiac abnormalities increase sudden death risk with stimulants.",
+                difficulty: "hard"
+            },
+            {
+                question: "Best evidence-based psychotherapy for borderline personality disorder?",
+                options: [
+                    "A) Psychodynamic therapy",
+                    "B) DBT",
+                    "C) CBT",
+                    "D) Supportive therapy",
+                    "E) IPT",
+                    "F) EMDR"
+                ],
+                correct: 1,
+                explanation: "DBT has the strongest evidence base for reducing self-harm and suicidality in BPD.",
+                difficulty: "hard"
+            },
+            {
+                question: "Cerebellar cognitive affective syndrome most likely after stroke in which area?",
+                options: [
+                    "A) Anterior lobe",
+                    "B) Posterior lobe",
+                    "C) Flocculonodular lobe",
+                    "D) Deep nuclei",
+                    "E) Superior peduncle",
+                    "F) Vermis"
+                ],
+                correct: 1,
+                explanation: "Posterior lobe lesions cause cognitive/emotional symptoms (executive dysfunction, affect dysregulation).",
+                difficulty: "hard"
+            },
+            {
+                question: "Clock drawing test score of 2/10 suggests dysfunction in which brain region?",
+                options: [
+                    "A) Frontal lobe",
+                    "B) Parietal lobe",
+                    "C) Temporal lobe",
+                    "D) Occipital lobe",
+                    "E) Basal ganglia",
+                    "F) Cerebellum"
+                ],
+                correct: 1,
+                explanation: "Clock drawing primarily tests parietal lobe function (visuospatial processing).",
+                difficulty: "hard"
+            },
+            {
+                question: "Antidepressant most likely to cause SIADH in elderly?",
+                options: [
+                    "A) Bupropion",
+                    "B) Mirtazapine",
+                    "C) Escitalopram",
+                    "D) Nortriptyline",
+                    "E) Vortioxetine",
+                    "F) Vilazodone"
+                ],
+                correct: 2,
+                explanation: "SSRIs, especially escitalopram, have highest SIADH risk in elderly patients.",
+                difficulty: "hard"
+            },
+            {
+                question: "P300 amplitude reduction most associated with which condition?",
+                options: [
+                    "A) Major depression",
+                    "B) Schizophrenia",
+                    "C) Panic disorder",
+                    "D) OCD",
+                    "E) PTSD",
+                    "F) Bipolar disorder"
+                ],
+                correct: 1,
+                explanation: "P300 amplitude reduction is a robust finding in schizophrenia, reflecting cognitive deficits.",
+                difficulty: "hard"
+            },
+            {
+                question: "Which medication requires slow titration due to risk of aseptic meningitis?",
+                options: [
+                    "A) Lithium",
+                    "B) Valproate",
+                    "C) Lamotrigine",
+                    "D) Carbamazepine",
+                    "E) Oxcarbazepine",
+                    "F) Topiramate"
+                ],
+                correct: 2,
+                explanation: "Lamotrigine can cause aseptic meningitis if titrated too quickly.",
+                difficulty: "hard"
+            },
+            {
+                question: "Biomarker most specific for Alzheimer's vs other dementias?",
+                options: [
+                    "A) Tau protein",
+                    "B) Aβ42/Aβ40 ratio",
+                    "C) Neurofilament light",
+                    "D) 14-3-3 protein",
+                    "E) S100B",
+                    "F) GFAP"
+                ],
+                correct: 1,
+                explanation: "Aβ42/Aβ40 ratio in CSF/plasma is most specific for Alzheimer's pathology.",
+                difficulty: "hard"
+            },
+            {
+                question: "Orexin/hypocretin deficiency causes which disorder?",
+                options: [
+                    "A) REM sleep behavior disorder",
+                    "B) Narcolepsy type 1",
+                    "C) Kleine-Levin syndrome",
+                    "D) Fatal familial insomnia",
+                    "E) Restless legs syndrome",
+                    "F) Sleep apnea"
+                ],
+                correct: 1,
+                explanation: "Narcolepsy type 1 is caused by loss of orexin/hypocretin neurons in hypothalamus.",
+                difficulty: "hard"
+            },
+            {
+                question: "Best treatment for neuroleptic-induced akathisia?",
+                options: [
+                    "A) Benztropine",
+                    "B) Propranolol",
+                    "C) Amantadine",
+                    "D) Diphenhydramine",
+                    "E) Lorazepam",
+                    "F) Vitamin E"
+                ],
+                correct: 1,
+                explanation: "Beta-blockers like propranolol are first-line for akathisia (anticholinergics ineffective).",
+                difficulty: "hard"
+            },
+            {
+                question: "Transcranial magnetic stimulation FDA-approved target for depression?",
+                options: [
+                    "A) Right DLPFC",
+                    "B) Left DLPFC",
+                    "C) Bilateral DLPFC",
+                    "D) Left VMPFC",
+                    "E) Right parietal",
+                    "F) Supplementary motor area"
+                ],
+                correct: 1,
+                explanation: "Left dorsolateral prefrontal cortex is the FDA-approved TMS target for depression.",
+                difficulty: "hard"
+            },
+            {
+                question: "Which atypical antipsychotic has highest D2 receptor occupancy at therapeutic doses?",
+                options: [
+                    "A) Quetiapine",
+                    "B) Clozapine",
+                    "C) Risperidone",
+                    "D) Olanzapine",
+                    "E) Aripiprazole",
+                    "F) Ziprasidone"
+                ],
+                correct: 2,
+                explanation: "Risperidone has highest D2 occupancy (>70%) at therapeutic doses among atypicals.",
+                difficulty: "hard"
+            },
+            {
+                question: "Fragile X premutation carriers at risk for which late-onset syndrome?",
+                options: [
+                    "A) Frontotemporal dementia",
+                    "B) FXTAS",
+                    "C) Progressive supranuclear palsy",
+                    "D) Corticobasal degeneration",
+                    "E) Multiple system atrophy",
+                    "F) Lewy body dementia"
+                ],
+                correct: 1,
+                explanation: "Fragile X-associated tremor/ataxia syndrome (FXTAS) occurs in premutation carriers.",
+                difficulty: "hard"
+            },
+            {
+                question: "Memantine mechanism in Alzheimer's treatment?",
+                options: [
+                    "A) Acetylcholinesterase inhibition",
+                    "B) NMDA antagonism",
+                    "C) GABA potentiation",
+                    "D) Serotonin modulation",
+                    "E) Amyloid clearance",
+                    "F) Tau stabilization"
+                ],
+                correct: 1,
+                explanation: "Memantine is an uncompetitive NMDA receptor antagonist, reducing excitotoxicity.",
+                difficulty: "hard"
+            },
+            {
+                question: "Most sensitive early marker of lithium nephrotoxicity?",
+                options: [
+                    "A) Serum creatinine",
+                    "B) Urine specific gravity",
+                    "C) eGFR",
+                    "D) Urine albumin/creatinine ratio",
+                    "E) 24-hour urine protein",
+                    "F) Cystatin C"
+                ],
+                correct: 3,
+                explanation: "Urine albumin/creatinine ratio detects early tubular damage before creatinine rises.",
+                difficulty: "hard"
+            },
+            {
+                question: "Pimavanserin approved for treating psychosis in which condition?",
+                options: [
+                    "A) Schizophrenia",
+                    "B) Parkinson's disease",
+                    "C) Alzheimer's disease",
+                    "D) Lewy body dementia",
+                    "E) Bipolar disorder",
+                    "F) Delirium"
+                ],
+                correct: 1,
+                explanation: "Pimavanserin (5-HT2A inverse agonist) is FDA-approved for Parkinson's disease psychosis.",
+                difficulty: "hard"
+            },
+            {
+                question: "CYP3A4 inhibitor causing dangerous interaction with quetiapine?",
+                options: [
+                    "A) Fluoxetine",
+                    "B) Ketoconazole",
+                    "C) Bupropion",
+                    "D) Duloxetine",
+                    "E) Sertraline",
+                    "F) Citalopram"
+                ],
+                correct: 1,
+                explanation: "Ketoconazole strongly inhibits CYP3A4, dramatically increasing quetiapine levels.",
+                difficulty: "hard"
+            },
+            {
+                question: "Gene most strongly associated with treatment-resistant schizophrenia?",
+                options: [
+                    "A) DISC1",
+                    "B) COMT",
+                    "C) DRD2",
+                    "D) CACNA1C",
+                    "E) C4A",
+                    "F) NRG1"
+                ],
+                correct: 4,
+                explanation: "C4A (complement component 4A) overexpression strongly linked to treatment resistance.",
+                difficulty: "hard"
+            }
+        ];
+
+        const easyQuestions = [
+            {
+                question: "First-line medication for major depressive disorder?",
+                options: [
+                    "A) Lithium",
+                    "B) Sertraline",
+                    "C) Haloperidol",
+                    "D) Lorazepam",
+                    "E) Methylphenidate",
+                    "F) Buspirone"
+                ],
+                correct: 1,
+                explanation: "SSRIs like sertraline are first-line treatments for major depression.",
+                difficulty: "easy"
+            },
+            {
+                question: "Hallmark symptom of schizophrenia?",
+                options: [
+                    "A) Mood swings",
+                    "B) Hallucinations",
+                    "C) Memory loss",
+                    "D) Hyperactivity",
+                    "E) Compulsions",
+                    "F) Phobias"
+                ],
+                correct: 1,
+                explanation: "Hallucinations, especially auditory, are hallmark positive symptoms of schizophrenia.",
+                difficulty: "easy"
+            },
+            {
+                question: "Duration criterion for major depressive episode?",
+                options: [
+                    "A) 1 week",
+                    "B) 2 weeks",
+                    "C) 1 month",
+                    "D) 2 months",
+                    "E) 6 months",
+                    "F) 1 year"
+                ],
+                correct: 1,
+                explanation: "Major depressive episode requires symptoms for at least 2 weeks.",
+                difficulty: "easy"
+            },
+            {
+                question: "Neurotransmitter primarily involved in depression?",
+                options: [
+                    "A) Acetylcholine",
+                    "B) Serotonin",
+                    "C) Histamine",
+                    "D) Glycine",
+                    "E) Adenosine",
+                    "F) Melatonin"
+                ],
+                correct: 1,
+                explanation: "Serotonin deficiency is the classic monoamine hypothesis of depression.",
+                difficulty: "easy"
+            },
+            {
+                question: "Most common side effect of SSRIs?",
+                options: [
+                    "A) Weight loss",
+                    "B) Hypertension",
+                    "C) GI disturbance",
+                    "D) Hair loss",
+                    "E) Tremor",
+                    "F) Confusion"
+                ],
+                correct: 2,
+                explanation: "Gastrointestinal side effects (nausea, diarrhea) are most common with SSRIs.",
+                difficulty: "easy"
+            },
+            {
+                question: "Treatment for acute anxiety/panic attack?",
+                options: [
+                    "A) Antipsychotic",
+                    "B) Benzodiazepine",
+                    "C) Mood stabilizer",
+                    "D) Stimulant",
+                    "E) Antihistamine",
+                    "F) Beta blocker"
+                ],
+                correct: 1,
+                explanation: "Benzodiazepines provide rapid relief for acute anxiety and panic attacks.",
+                difficulty: "easy"
+            },
+            {
+                question: "Manic episode duration requirement?",
+                options: [
+                    "A) 2 days",
+                    "B) 4 days",
+                    "C) 7 days",
+                    "D) 14 days",
+                    "E) 21 days",
+                    "F) 30 days"
+                ],
+                correct: 2,
+                explanation: "Manic episode requires symptoms for at least 7 days (or any duration if hospitalized).",
+                difficulty: "easy"
+            },
+            {
+                question: "Gold standard treatment for bipolar disorder?",
+                options: [
+                    "A) Antidepressants",
+                    "B) Lithium",
+                    "C) Antipsychotics",
+                    "D) Benzodiazepines",
+                    "E) Stimulants",
+                    "F) Anticonvulsants"
+                ],
+                correct: 1,
+                explanation: "Lithium remains the gold standard mood stabilizer for bipolar disorder.",
+                difficulty: "easy"
+            },
+            {
+                question: "Core feature of ADHD?",
+                options: [
+                    "A) Hallucinations",
+                    "B) Inattention",
+                    "C) Depression",
+                    "D) Mania",
+                    "E) Obsessions",
+                    "F) Delusions"
+                ],
+                correct: 1,
+                explanation: "Inattention is a core feature of ADHD (along with hyperactivity/impulsivity).",
+                difficulty: "easy"
+            },
+            {
+                question: "First-line therapy for PTSD?",
+                options: [
+                    "A) Psychoanalysis",
+                    "B) Trauma-focused CBT",
+                    "C) Hypnotherapy",
+                    "D) Group therapy",
+                    "E) Art therapy",
+                    "F) Music therapy"
+                ],
+                correct: 1,
+                explanation: "Trauma-focused CBT is first-line psychotherapy for PTSD.",
+                difficulty: "easy"
+            },
+            {
+                question: "What class of medication is diazepam?",
+                options: [
+                    "A) SSRI",
+                    "B) Benzodiazepine",
+                    "C) Antipsychotic",
+                    "D) MAOI",
+                    "E) TCA",
+                    "F) SNRI"
+                ],
+                correct: 1,
+                explanation: "Diazepam (Valium) is a benzodiazepine used for anxiety and seizures.",
+                difficulty: "easy"
+            },
+            {
+                question: "Primary symptom of panic disorder?",
+                options: [
+                    "A) Persistent sadness",
+                    "B) Recurrent panic attacks",
+                    "C) Chronic worry",
+                    "D) Social avoidance",
+                    "E) Flashbacks",
+                    "F) Mood swings"
+                ],
+                correct: 1,
+                explanation: "Panic disorder is characterized by recurrent, unexpected panic attacks.",
+                difficulty: "easy"
+            },
+            {
+                question: "Which symptom is NOT part of depression?",
+                options: [
+                    "A) Anhedonia",
+                    "B) Flight of ideas",
+                    "C) Guilt",
+                    "D) Fatigue",
+                    "E) Insomnia",
+                    "F) Poor concentration"
+                ],
+                correct: 1,
+                explanation: "Flight of ideas is a manic symptom, not a depressive symptom.",
+                difficulty: "easy"
+            },
+            {
+                question: "Treatment for alcohol withdrawal?",
+                options: [
+                    "A) Antipsychotics",
+                    "B) Benzodiazepines",
+                    "C) SSRIs",
+                    "D) Stimulants",
+                    "E) Opioids",
+                    "F) Anticholinergics"
+                ],
+                correct: 1,
+                explanation: "Benzodiazepines prevent seizures and treat alcohol withdrawal symptoms.",
+                difficulty: "easy"
+            },
+            {
+                question: "Age of onset typically for schizophrenia in males?",
+                options: [
+                    "A) 5-10 years",
+                    "B) 10-15 years",
+                    "C) 18-25 years",
+                    "D) 30-40 years",
+                    "E) 40-50 years",
+                    "F) 50-60 years"
+                ],
+                correct: 2,
+                explanation: "Schizophrenia typically onset in late teens to mid-twenties for males.",
+                difficulty: "easy"
+            }
+        ];
+
+        const mediumQuestions = [
+            {
+                question: "Antidepressant with lowest risk of sexual dysfunction?",
+                options: [
+                    "A) Paroxetine",
+                    "B) Bupropion",
+                    "C) Sertraline",
+                    "D) Fluoxetine",
+                    "E) Citalopram",
+                    "F) Venlafaxine"
+                ],
+                correct: 1,
+                explanation: "Bupropion (dopamine/norepinephrine reuptake inhibitor) has minimal sexual side effects.",
+                difficulty: "medium"
+            },
+            {
+                question: "First-rank symptom of schizophrenia?",
+                options: [
+                    "A) Flat affect",
+                    "B) Thought broadcasting",
+                    "C) Social withdrawal",
+                    "D) Poor hygiene",
+                    "E) Concrete thinking",
+                    "F) Ambivalence"
+                ],
+                correct: 1,
+                explanation: "Thought broadcasting is a Schneiderian first-rank symptom of schizophrenia.",
+                difficulty: "medium"
+            },
+            {
+                question: "Black box warning for all antidepressants?",
+                options: [
+                    "A) Hepatotoxicity",
+                    "B) Suicidality in young adults",
+                    "C) Cardiac arrhythmias",
+                    "D) Stevens-Johnson syndrome",
+                    "E) Serotonin syndrome",
+                    "F) Tardive dyskinesia"
+                ],
+                correct: 1,
+                explanation: "FDA black box warning for increased suicidal thoughts in patients under 25.",
+                difficulty: "medium"
+            },
+            {
+                question: "Which antipsychotic has highest weight gain risk?",
+                options: [
+                    "A) Haloperidol",
+                    "B) Aripiprazole",
+                    "C) Olanzapine",
+                    "D) Ziprasidone",
+                    "E) Lurasidone",
+                    "F) Paliperidone"
+                ],
+                correct: 2,
+                explanation: "Olanzapine causes the most weight gain among antipsychotics.",
+                difficulty: "medium"
+            },
+            {
+                question: "Lab monitoring required for clozapine?",
+                options: [
+                    "A) Liver function",
+                    "B) Absolute neutrophil count",
+                    "C) Thyroid function",
+                    "D) Prolactin level",
+                    "E) Creatinine",
+                    "F) Platelet count"
+                ],
+                correct: 1,
+                explanation: "ANC monitoring required due to agranulocytosis risk with clozapine.",
+                difficulty: "medium"
+            },
+            {
+                question: "Difference between bipolar I and bipolar II?",
+                options: [
+                    "A) Duration of episodes",
+                    "B) Presence of full manic episode",
+                    "C) Age of onset",
+                    "D) Response to lithium",
+                    "E) Psychotic features",
+                    "F) Gender distribution"
+                ],
+                correct: 1,
+                explanation: "Bipolar I requires at least one full manic episode; bipolar II has hypomania only.",
+                difficulty: "medium"
+            },
+            {
+                question: "SSRI discontinuation syndrome characterized by?",
+                options: [
+                    "A) Hypertension",
+                    "B) Brain zaps and flu-like symptoms",
+                    "C) Seizures",
+                    "D) Psychosis",
+                    "E) Mania",
+                    "F) Catatonia"
+                ],
+                correct: 1,
+                explanation: "SSRI discontinuation causes 'brain zaps,' dizziness, and flu-like symptoms.",
+                difficulty: "medium"
+            },
+            {
+                question: "Which medication is contraindicated with MAOIs?",
+                options: [
+                    "A) Acetaminophen",
+                    "B) Meperidine",
+                    "C) Aspirin",
+                    "D) Lorazepam",
+                    "E) Gabapentin",
+                    "F) Propranolol"
+                ],
+                correct: 1,
+                explanation: "Meperidine with MAOIs can cause fatal serotonin syndrome.",
+                difficulty: "medium"
+            },
+            {
+                question: "Negative symptom of schizophrenia?",
+                options: [
+                    "A) Hallucinations",
+                    "B) Delusions",
+                    "C) Alogia",
+                    "D) Agitation",
+                    "E) Catatonia",
+                    "F) Disorganized speech"
+                ],
+                correct: 2,
+                explanation: "Alogia (poverty of speech) is a negative symptom of schizophrenia.",
+                difficulty: "medium"
+            },
+            {
+                question: "Therapeutic lithium level range?",
+                options: [
+                    "A) 0.2-0.4 mEq/L",
+                    "B) 0.6-1.2 mEq/L",
+                    "C) 1.5-2.0 mEq/L",
+                    "D) 2.0-2.5 mEq/L",
+                    "E) 0.1-0.3 mEq/L",
+                    "F) 1.2-1.5 mEq/L"
+                ],
+                correct: 1,
+                explanation: "Therapeutic lithium level is 0.6-1.2 mEq/L for most patients.",
+                difficulty: "medium"
+            }
+        ];
+
+        // Audio context for buzzer sound
+        let audioContext;
+        function initAudio() {
+            if (!audioContext) {
+                audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            }
+        }
+
+        function playBuzzer() {
+            initAudio();
+            
+            // Create 3 quick buzzes for alarm effect
+            for (let i = 0; i < 3; i++) {
+                const oscillator = audioContext.createOscillator();
+                const gainNode = audioContext.createGain();
+                
+                oscillator.connect(gainNode);
+                gainNode.connect(audioContext.destination);
+                
+                oscillator.type = 'square';
+                oscillator.frequency.value = 120;
+                
+                const startTime = audioContext.currentTime + (i * 0.15);
+                gainNode.gain.setValueAtTime(0, startTime);
+                gainNode.gain.linearRampToValueAtTime(0.3, startTime + 0.01);
+                gainNode.gain.linearRampToValueAtTime(0.3, startTime + 0.08);
+                gainNode.gain.linearRampToValueAtTime(0, startTime + 0.1);
+                
+                oscillator.start(startTime);
+                oscillator.stop(startTime + 0.1);
+            }
+        }
+
+        function playSuccess() {
+            initAudio();
+            const oscillator = audioContext.createOscillator();
+            const gainNode = audioContext.createGain();
+            
+            oscillator.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+            
+            oscillator.frequency.value = 800; // Higher frequency for success
+            oscillator.type = 'sine';
+            
+            gainNode.gain.setValueAtTime(0.2, audioContext.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.3);
+            
+            oscillator.start(audioContext.currentTime);
+            oscillator.stop(audioContext.currentTime + 0.3);
+        }
+
+        // Combine and shuffle questions at startup
+        let questions = [];
+        
+        function initializeQuestions() {
+            questions = [...hardQuestions, ...easyQuestions, ...mediumQuestions];
+            
+            // Fisher-Yates shuffle
+            for (let i = questions.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [questions[i], questions[j]] = [questions[j], questions[i]];
+            }
+        }
+
+        let currentQuestion = 0;
+        let correctAnswers = 0;
+        let hardCorrect = 0;
+        let easyCorrect = 0;
+        let hardTotal = 0;
+        let easyTotal = 0;
+        let answerSelected = false;
+        let quizComplete = false;
+
+        function showQuestion() {
+            if (currentQuestion >= questions.length) {
+                showResults();
+                return;
+            }
+
+            const q = questions[currentQuestion];
+            const progress = ((currentQuestion + 1) / questions.length) * 100;
+            document.getElementById('progressFill').style.width = `${progress}%`;
+
+            let difficultyBadge = '';
+            if (q.difficulty === 'easy') {
+                difficultyBadge = '<span class="difficulty-badge difficulty-easy">Easy</span>';
+            } else if (q.difficulty === 'medium') {
+                difficultyBadge = '<span class="difficulty-badge difficulty-medium">Medium</span>';
+            } else {
+                difficultyBadge = '<span class="difficulty-badge difficulty-hard">Hard</span>';
+            }
+
+            let optionsHTML = q.options.map((opt, i) => 
+                `<div class="option" data-index="${i}" onclick="selectAnswer(${i})">${opt}</div>`
+            ).join('');
+
+            document.getElementById('quizContent').innerHTML = `
+                <div class="question-number">
+                    Question ${currentQuestion + 1} of ${questions.length}
+                    ${difficultyBadge}
+                </div>
+                <div class="question">${q.question}</div>
+                <div class="options">${optionsHTML}</div>
+            `;
+
+            answerSelected = false;
+        }
+
+        function showPopup() {
+            const overlay = document.createElement('div');
+            overlay.className = 'popup-overlay';
+            
+            const popup = document.createElement('div');
+            popup.className = 'popup-modal';
+            popup.innerHTML = `
+                <div class="emoji">💊</div>
+                <h3>TAKE YOUR MEDS!</h3>
+            `;
+            
+            document.body.appendChild(overlay);
+            document.body.appendChild(popup);
+            
+            setTimeout(() => {
+                overlay.remove();
+                popup.remove();
+            }, 3000);
+        }
+
+        function showCorrectPopup() {
+            const overlay = document.createElement('div');
+            overlay.className = 'popup-overlay';
+            
+            const popup = document.createElement('div');
+            popup.className = 'popup-modal popup-correct';
+            popup.innerHTML = `
+                <div class="emoji">💉</div>
+                <h3>GIVE YOUR MEDS TO A PATIENT OF YOUR CHOICE!</h3>
+            `;
+            
+            document.body.appendChild(overlay);
+            document.body.appendChild(popup);
+            
+            setTimeout(() => {
+                overlay.remove();
+                popup.remove();
+            }, 2000);
+        }
+
+        function selectAnswer(index) {
+            if (answerSelected) return;
+            answerSelected = true;
+
+            const q = questions[currentQuestion];
+            const options = document.querySelectorAll('.option');
+            
+            // Disable all options
+            options.forEach(opt => opt.classList.add('disabled'));
+            
+            if (index === q.correct) {
+                // Correct answer
+                options[index].classList.add('correct');
+                correctAnswers++;
+                playSuccess();
+                showCorrectPopup();
+                
+                if (q.difficulty === 'easy') {
+                    easyCorrect++;
+                } else if (q.difficulty === 'medium') {
+                    mediumCorrect++;
+                } else {
+                    hardCorrect++;
+                }
+            } else {
+                // Wrong answer
+                options[index].classList.add('incorrect');
+                options[q.correct].classList.add('correct');
+                playBuzzer();
+                showPopup();
+            }
+            
+            // Track totals
+            if (q.difficulty === 'easy') {
+                easyTotal++;
+            } else if (q.difficulty === 'medium') {
+                mediumTotal++;
+            } else {
+                hardTotal++;
+            }
+
+            // Show explanation
+            const answerHTML = `
+                <div class="answer-reveal">
+                    <div class="answer-label">Explanation</div>
+                    <div class="answer-text">${q.explanation}</div>
+                </div>
+                <div class="click-hint">Click anywhere to continue to next question...</div>
+            `;
+
+            document.getElementById('quizContent').insertAdjacentHTML('beforeend', answerHTML);
+            
+            // Add click handler to advance to next question
+            setTimeout(() => {
+                document.getElementById('quizContainer').style.cursor = 'pointer';
+                document.getElementById('quizContainer').onclick = () => {
+                    document.getElementById('quizContainer').onclick = null;
+                    document.getElementById('quizContainer').style.cursor = 'default';
+                    nextQuestion();
+                };
+            }, 500);
+        }
+
+        function nextQuestion() {
+            currentQuestion++;
+            showQuestion();
+        }
+
+        function showResults() {
+            quizComplete = true;
+            
+            const totalScore = Math.round((correctAnswers / questions.length) * 100);
+            const hardScore = hardTotal > 0 ? Math.round((hardCorrect / hardTotal) * 100) : 0;
+            const mediumScore = mediumTotal > 0 ? Math.round((mediumCorrect / mediumTotal) * 100) : 0;
+            const easyScore = easyTotal > 0 ? Math.round((easyCorrect / easyTotal) * 100) : 0;
+            
+            document.getElementById('quizContent').innerHTML = `
+                <div class="quiz-complete">
+                    <h2>💀 Quiz Complete! 💀</h2>
+                    <div class="score">${totalScore}%</div>
+                    <div class="score-breakdown">
+                        <div class="score-item">
+                            <div class="score-label">Easy Questions</div>
+                            <div class="score-value">${easyCorrect}/${easyTotal}</div>
+                        </div>
+                        <div class="score-item">
+                            <div class="score-label">Medium Questions</div>
+                            <div class="score-value">${mediumCorrect}/${mediumTotal}</div>
+                        </div>
+                        <div class="score-item">
+                            <div class="score-label">Hard Questions</div>
+                            <div class="score-value">${hardCorrect}/${hardTotal}</div>
+                        </div>
+                    </div>
+                    <p style="color: #ff9500; margin-bottom: 30px;">You survived ${correctAnswers} out of ${questions.length} nightmare questions! 🎃</p>
+                    <button class="restart-btn" onclick="restartQuiz()">Rise Again 🧟</button>
+                </div>
+            `;
+        }
+
+        function restartQuiz() {
+            currentQuestion = 0;
+            correctAnswers = 0;
+            hardCorrect = 0;
+            mediumCorrect = 0;
+            easyCorrect = 0;
+            hardTotal = 0;
+            mediumTotal = 0;
+            easyTotal = 0;
+            quizComplete = false;
+            initializeQuestions();
+            showQuestion();
+        }
+
+        // Initialize quiz
+        initializeQuestions();
+        showQuestion();
+    </script>
+</body>
+</html>
