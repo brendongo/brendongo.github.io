@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <link href="https://fonts.googleapis.com/css2?family=Creepster&display=swap" rel="stylesheet">
     <title>Nightmare Psychiatry Quiz 🎃</title>
     <style>
@@ -10,6 +10,11 @@
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            -webkit-tap-highlight-color: rgba(255, 94, 0, 0.2);
+        }
+
+        html {
+            scroll-behavior: smooth;
         }
 
         body {
@@ -20,6 +25,10 @@
             justify-content: center;
             align-items: center;
             padding: 20px;
+            padding-top: max(20px, env(safe-area-inset-top));
+            padding-right: max(20px, env(safe-area-inset-right));
+            padding-bottom: max(20px, env(safe-area-inset-bottom));
+            padding-left: max(20px, env(safe-area-inset-left));
             user-select: none;
             position: relative;
             overflow: hidden;
@@ -165,7 +174,7 @@
         .options {
             display: flex;
             flex-direction: column;
-            gap: 18px;
+            gap: 20px;
         }
 
         .option {
@@ -180,6 +189,8 @@
             overflow: hidden;
             text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
             cursor: pointer;
+            touch-action: manipulation;
+            will-change: transform;
         }
 
         .option:hover:not(.correct):not(.incorrect):not(.disabled) {
@@ -187,6 +198,13 @@
             background: linear-gradient(135deg, rgba(50, 25, 70, 0.8), rgba(70, 35, 90, 0.8));
             transform: translateX(5px);
             box-shadow: 0 0 20px rgba(255, 94, 0, 0.2);
+        }
+
+        .option:active:not(.correct):not(.incorrect):not(.disabled) {
+            border-color: rgba(255, 94, 0, 0.7);
+            background: linear-gradient(135deg, rgba(60, 30, 80, 0.9), rgba(80, 40, 100, 0.9));
+            transform: translateX(5px) scale(0.98);
+            box-shadow: 0 0 25px rgba(255, 94, 0, 0.4);
         }
 
         .option.disabled {
@@ -343,12 +361,19 @@
             transition: all 0.3s ease;
             text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
             box-shadow: 0 5px 20px rgba(255, 94, 0, 0.4);
+            touch-action: manipulation;
+            will-change: transform;
         }
 
         .restart-btn:hover {
             transform: translateY(-3px);
             box-shadow: 0 10px 30px rgba(255, 94, 0, 0.6);
             background: linear-gradient(135deg, #ff7300, #ff9500);
+        }
+
+        .restart-btn:active {
+            transform: translateY(-1px) scale(0.98);
+            box-shadow: 0 5px 20px rgba(255, 94, 0, 0.5);
         }
 
         .spider {
@@ -387,6 +412,38 @@
             background: linear-gradient(135deg, #50c878, #228b22);
             border: 3px solid #50c878;
             box-shadow: 0 0 50px rgba(80, 200, 120, 0.8);
+        }
+
+        .popup-close {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            width: 44px;
+            height: 44px;
+            cursor: pointer;
+            background: rgba(0, 0, 0, 0.3);
+            border: 2px solid rgba(255, 255, 255, 0.5);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            font-weight: bold;
+            color: white;
+            transition: all 0.2s ease;
+            line-height: 1;
+        }
+
+        .popup-close:hover {
+            background: rgba(0, 0, 0, 0.5);
+            border-color: rgba(255, 255, 255, 0.8);
+            transform: scale(1.1);
+        }
+
+        .popup-close:active {
+            background: rgba(0, 0, 0, 0.7);
+            border-color: rgba(255, 255, 255, 1);
+            transform: scale(0.95);
         }
 
         @keyframes popupAppear {
@@ -429,6 +486,139 @@
             z-index: 999;
             opacity: 0;
             animation: fadeIn 0.3s ease forwards;
+        }
+
+        /* Responsive Media Queries for iPad/Mobile */
+        @media (max-width: 768px) {
+            .quiz-container {
+                padding: 20px;
+                max-width: 100%;
+            }
+
+            .quiz-container::before,
+            .quiz-container::after {
+                font-size: 30px;
+                top: -15px;
+            }
+
+            .quiz-container::before {
+                left: 15px;
+            }
+
+            .quiz-container::after {
+                right: 15px;
+            }
+
+            .question {
+                font-size: 22px;
+                margin-bottom: 30px;
+            }
+
+            .option {
+                padding: 16px 20px;
+                font-size: 17px;
+            }
+
+            .quiz-complete h2 {
+                font-size: 36px;
+            }
+
+            .score {
+                font-size: 48px;
+            }
+
+            .score-breakdown {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .score-item {
+                padding: 15px;
+            }
+
+            .restart-btn {
+                padding: 15px 40px;
+                font-size: 18px;
+            }
+
+            .popup-modal {
+                padding: 30px 20px;
+                width: 90%;
+                max-width: 400px;
+            }
+
+            .popup-modal h3 {
+                font-size: 28px;
+            }
+
+            .popup-correct h3 {
+                font-size: 24px;
+            }
+
+            .popup-modal .emoji {
+                font-size: 60px;
+            }
+
+            .spider {
+                font-size: 24px;
+                top: 5%;
+                right: 3%;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .quiz-container {
+                padding: 15px;
+            }
+
+            .question {
+                font-size: 20px;
+            }
+
+            .option {
+                padding: 14px 18px;
+                font-size: 16px;
+            }
+
+            .quiz-complete h2 {
+                font-size: 28px;
+            }
+
+            .score {
+                font-size: 40px;
+            }
+
+            .restart-btn {
+                padding: 12px 30px;
+                font-size: 16px;
+            }
+
+            .popup-modal h3 {
+                font-size: 24px;
+            }
+
+            .popup-correct h3 {
+                font-size: 20px;
+            }
+
+            .popup-modal .emoji {
+                font-size: 50px;
+            }
+        }
+
+        /* iPad specific optimizations */
+        @media (min-width: 768px) and (max-width: 1024px) {
+            .quiz-container {
+                padding: 35px;
+            }
+
+            .question {
+                font-size: 26px;
+            }
+
+            .option {
+                font-size: 18px;
+            }
         }
     </style>
 </head>
@@ -1223,14 +1413,23 @@
 
         // Audio context for buzzer sound
         let audioContext;
+        let audioInitialized = false;
+
         function initAudio() {
             if (!audioContext) {
                 audioContext = new (window.AudioContext || window.webkitAudioContext)();
             }
+            // Resume audio context for iOS Safari
+            if (audioContext.state === 'suspended') {
+                audioContext.resume();
+            }
+            audioInitialized = true;
         }
 
         function playBuzzer() {
-            initAudio();
+            if (!audioInitialized) {
+                initAudio();
+            }
             
             // Create 3 quick buzzes for alarm effect
             for (let i = 0; i < 3; i++) {
@@ -1255,7 +1454,9 @@
         }
 
         function playSuccess() {
-            initAudio();
+            if (!audioInitialized) {
+                initAudio();
+            }
             const oscillator = audioContext.createOscillator();
             const gainNode = audioContext.createGain();
             
@@ -1272,15 +1473,28 @@
             oscillator.stop(audioContext.currentTime + 0.3);
         }
 
+        // Seeded random number generator for stable shuffling
+        function seededRandom(seed) {
+            let state = seed;
+            return function() {
+                state = (state * 1664525 + 1013904223) % 4294967296;
+                return state / 4294967296;
+            };
+        }
+
         // Combine and shuffle questions at startup
         let questions = [];
-        
+
         function initializeQuestions() {
             questions = [...hardQuestions, ...easyQuestions, ...mediumQuestions];
-            
-            // Fisher-Yates shuffle
+
+            // Use a fixed seed for stable shuffling (you can change this seed to get different orders)
+            const seed = 44;
+            const random = seededRandom(seed);
+
+            // Fisher-Yates shuffle with seeded random
             for (let i = questions.length - 1; i > 0; i--) {
-                const j = Math.floor(Math.random() * (i + 1));
+                const j = Math.floor(random() * (i + 1));
                 [questions[i], questions[j]] = [questions[j], questions[i]];
             }
         }
@@ -1288,17 +1502,55 @@
         let currentQuestion = 0;
         let correctAnswers = 0;
         let hardCorrect = 0;
+        let mediumCorrect = 0;
         let easyCorrect = 0;
         let hardTotal = 0;
+        let mediumTotal = 0;
         let easyTotal = 0;
         let answerSelected = false;
         let quizComplete = false;
+
+        // URL deep linking functions
+        function updateURL() {
+            const params = new URLSearchParams();
+            if (quizComplete) {
+                params.set('complete', 'true');
+            } else {
+                params.set('question', currentQuestion + 1); // 1-indexed for user-friendly URLs
+            }
+            const newURL = `${window.location.pathname}?${params.toString()}`;
+            window.history.pushState({ question: currentQuestion }, '', newURL);
+        }
+
+        function getQuestionFromURL() {
+            const params = new URLSearchParams(window.location.search);
+            const questionParam = params.get('question');
+            if (questionParam) {
+                const questionNum = parseInt(questionParam, 10) - 1; // Convert to 0-indexed
+                if (questionNum >= 0 && questionNum < questions.length) {
+                    return questionNum;
+                }
+            }
+            return 0;
+        }
+
+        // Handle browser back/forward buttons
+        window.addEventListener('popstate', (event) => {
+            if (event.state && event.state.question !== undefined) {
+                currentQuestion = event.state.question;
+                answerSelected = false;
+                showQuestion();
+            }
+        });
 
         function showQuestion() {
             if (currentQuestion >= questions.length) {
                 showResults();
                 return;
             }
+
+            // Update URL with current question
+            updateURL();
 
             const q = questions[currentQuestion];
             const progress = ((currentQuestion + 1) / questions.length) * 100;
@@ -1313,7 +1565,7 @@
                 difficultyBadge = '<span class="difficulty-badge difficulty-hard">Hard</span>';
             }
 
-            let optionsHTML = q.options.map((opt, i) => 
+            let optionsHTML = q.options.map((opt, i) =>
                 `<div class="option" data-index="${i}" onclick="selectAnswer(${i})">${opt}</div>`
             ).join('');
 
@@ -1332,41 +1584,59 @@
         function showPopup() {
             const overlay = document.createElement('div');
             overlay.className = 'popup-overlay';
-            
+
             const popup = document.createElement('div');
             popup.className = 'popup-modal';
             popup.innerHTML = `
+                <div class="popup-close">×</div>
                 <div class="emoji">💊</div>
                 <h3>TAKE YOUR MEDS!</h3>
             `;
-            
+
             document.body.appendChild(overlay);
             document.body.appendChild(popup);
-            
-            setTimeout(() => {
+
+            // Close popup when X button is clicked
+            const closeBtn = popup.querySelector('.popup-close');
+            closeBtn.onclick = () => {
                 overlay.remove();
                 popup.remove();
-            }, 3000);
+            };
+
+            // Also close when clicking overlay
+            overlay.onclick = () => {
+                overlay.remove();
+                popup.remove();
+            };
         }
 
         function showCorrectPopup() {
             const overlay = document.createElement('div');
             overlay.className = 'popup-overlay';
-            
+
             const popup = document.createElement('div');
             popup.className = 'popup-modal popup-correct';
             popup.innerHTML = `
+                <div class="popup-close">×</div>
                 <div class="emoji">💉</div>
                 <h3>GIVE YOUR MEDS TO A PATIENT OF YOUR CHOICE!</h3>
             `;
-            
+
             document.body.appendChild(overlay);
             document.body.appendChild(popup);
-            
-            setTimeout(() => {
+
+            // Close popup when X button is clicked
+            const closeBtn = popup.querySelector('.popup-close');
+            closeBtn.onclick = () => {
                 overlay.remove();
                 popup.remove();
-            }, 2000);
+            };
+
+            // Also close when clicking overlay
+            overlay.onclick = () => {
+                overlay.remove();
+                popup.remove();
+            };
         }
 
         function selectAnswer(index) {
@@ -1439,12 +1709,15 @@
 
         function showResults() {
             quizComplete = true;
-            
+
+            // Update URL to show completion
+            updateURL();
+
             const totalScore = Math.round((correctAnswers / questions.length) * 100);
             const hardScore = hardTotal > 0 ? Math.round((hardCorrect / hardTotal) * 100) : 0;
             const mediumScore = mediumTotal > 0 ? Math.round((mediumCorrect / mediumTotal) * 100) : 0;
             const easyScore = easyTotal > 0 ? Math.round((easyCorrect / easyTotal) * 100) : 0;
-            
+
             document.getElementById('quizContent').innerHTML = `
                 <div class="quiz-complete">
                     <h2>💀 Quiz Complete! 💀</h2>
@@ -1485,6 +1758,13 @@
 
         // Initialize quiz
         initializeQuestions();
+
+        // Check if there's a question in the URL and start from there
+        const urlQuestion = getQuestionFromURL();
+        if (urlQuestion > 0) {
+            currentQuestion = urlQuestion;
+        }
+
         showQuestion();
     </script>
 </body>
